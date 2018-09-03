@@ -32,8 +32,8 @@ class IAPResponse {
     try {
       jsonResponse = json.decode(source);
     } on FormatException {
-      String sourceWithoutNewlines = removeControlCharFull(source);
-      jsonResponse = json.decode(sourceWithoutNewlines);
+      String sourceWithoutControlChars = removeControlCharFull(source);
+      jsonResponse = json.decode(sourceWithoutControlChars);
     }
     return IAPResponse.fromJSON(jsonResponse);
   }
