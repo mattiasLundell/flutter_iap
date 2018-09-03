@@ -27,8 +27,16 @@ class IAPResponse {
   List<IAPProduct> products;
   List<IAPPurchase> purchases;
 
-  factory IAPResponse(String source) =>
-      new IAPResponse.fromJSON(json.decode(source));
+  factory IAPResponse(String source) {
+    var jsonResponse;
+    try {
+      jsonResponse = json.decode(source);
+    } on FormatException {
+      String sourceWithoutNewlines = removeControlCharFull(source);
+      jsonResponse = json.decode(sourceWithoutNewlines);
+    }
+    return IAPResponse.fromJSON(jsonResponse);
+  }
 
   IAPResponse.fromJSON(Map<String, dynamic> json) : status = json['status'] {
     if (json['products'] != null) {
@@ -78,4 +86,8 @@ class IAPProduct {
         downloadContentLengths = json['downloadContentLengths'],
         downloadContentVersion = json['downloadContentVersion'],
         type = json["type"];
+}
+
+ String removeControlCharFull(String str) {
+  return str.replaceAll(new RegExp("[\\r\\n\\t]"), "");
 }
